@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Close the container from base.html to allow full-width hero -->
+</div>
+
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        --card-bg: #ffffff;
+        --card-hover-y: -5px;
+        --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+        --text-heading: #0f172a;
+        --text-body: #64748b;
+        --radius-lg: 12px;
+    }
+
+    body {
+        background-color: #f8fafc;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        padding-top: 0 !important;
+    }
+
+    /* Hero Section */
+    .catalog-hero {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 8rem 0 6rem;
+        /* Reduced padding */
+        border-radius: 0 0 2rem 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 10;
+        box-shadow: var(--shadow-md);
+    }
+
+    .search-input {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        backdrop-filter: blur(8px);
+        border-radius: 50rem;
+        /* Pill shape */
+    }
+
+    .search-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .search-input:focus {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.5);
+        color: white;
+        box-shadow: none;
+    }
+
+    /* Square Card Design */
+    .course-card-square {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        transition: all 0.2s ease-in-out;
+        aspect-ratio: 1 / 1;
+        /* Force square aspect ratio */
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .course-card-square:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+        border-color: #cbd5e1;
+    }
+
+    .card-img-container {
+        height: 55%;
+        /* Top half for image */
+        position: relative;
+        overflow: hidden;
+        background: #f1f5f9;
+    }
+
+    .card-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .course-card-square:hover .card-img-container img {
+        transform: scale(1.05);
+        /* Subtle zoom */
+    }
+
+    .card-body-compact {
+        padding: 1rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .course-title-sm {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-heading);
+        margin-bottom: 0.25rem;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .teacher-info {
+        font-size: 0.75rem;
+        color: var(--text-body);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: auto;
+        /* Push content up */
+    }
+
+    .teacher-avatar-xs {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.6rem;
+        font-weight: bold;
+        color: #475569;
+    }
+
+    .card-footer-sm {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    /* Badges */
+    .badge-status {
+        position: absolute;
+        top: 0.75rem;
+        left: 0.75rem;
+        padding: 0.25rem 0.6rem;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: white;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(4px);
+        z-index: 5;
+    }
+
+    .badge-free {
+        background: rgba(16, 185, 129, 0.9);
+    }
+
+    /* Green */
+    .badge-paid {
+        background: rgba(59, 130, 246, 0.9);
+    }
+
+    /* Blue */
+
+    .price-tag {
+        font-weight: 700;
+        color: var(--text-heading);
+        font-size: 0.9rem;
+    }
+
+    .action-link {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+        color: #2563eb;
+    }
+
+    .action-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<!-- Hero Banner -->
+<div class="catalog-hero">
+    <div class="container text-center">
+        <h2 class="display-6 fw-bold mb-3">Explore Courses</h2>
+        <div class="mx-auto" style="max-width: 400px;">
+            <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0 text-white border-secondary">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" id="searchInput" class="form-control search-input border-start-0 ps-0 text-white"
+                    placeholder="Search courses...">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5" style="margin-top: -1.5rem; position: relative; z-index: 20;">
+    <!-- Course Grid: Use small columns for smaller cards -->
+    <div id="courses-grid" class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3">
+        <!-- Loading Skeleton -->
+        <div class="col-12 text-center py-5 d-flex flex-column justify-content-center align-items-center"
+            style="min-height: 40vh;">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 small text-muted">Loading...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => { fetchData(); });
+
+    // Image Handler
+    function handleImageError(img) {
+        img.onerror = null;
+        img.parentElement.innerHTML = `
+            <div class="d-flex align-items-center justify-content-center w-100 h-100 bg-light text-muted">
+                <i class="bi bi-image fs-4 opacity-25"></i>
+            </div>`;
+    }
+
+    async function fetchData(query = '') {
+        const grid = document.getElementById('courses-grid');
+
+        try {
+            const url = query ? `/api/courses/?search=${encodeURIComponent(query)}` : '/api/courses/';
+
+            if (query) grid.innerHTML = `
+                <div class="col-12 text-center py-5 d-flex flex-column justify-content-center align-items-center" style="min-height: 40vh;">
+                    <div class="spinner-border spinner-border-sm text-primary"></div>
+                </div>`;
+
+            const [coursesRes, enrollmentsRes] = await Promise.all([fetch(url), fetch('/api/enrollments/')]);
+
+            if (!coursesRes.ok) throw new Error("API Error");
+
+            const courses = await coursesRes.json();
+            const enrollments = await enrollmentsRes.json(); // Get enrollments to check status
+
+            renderGrid(courses, enrollments);
+
+        } catch (error) {
+            console.error(error);
+            grid.innerHTML = `<div class="col-12 text-center py-5 text-muted">Failed to load courses.</div>`;
+        }
+    }
+
+    // Debounce Search
+    let timeout;
+    document.getElementById('searchInput')?.addEventListener('input', (e) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fetchData(e.target.value), 400);
+    });
+
+    function renderGrid(courses, enrollments) {
+        const grid = document.getElementById('courses-grid');
+        grid.innerHTML = '';
+
+        // Setup Set for fast lookup
+        const enrolledIds = new Set(enrollments.map(e => e.course_id));
+
+        if (courses.length === 0) {
+            grid.innerHTML = `<div class="col-12 text-center py-5 text-muted">No courses found matching your criteria.</div>`;
+            return;
+        }
+
+        courses.forEach(course => {
+            const isEnrolled = enrolledIds.has(course.id);
+            const teacherName = course.teacher_name;
+            const teacherInitial = teacherName ? teacherName.charAt(0).toUpperCase() : '';
+
+            // Image
+            const imgHtml = course.photo
+                ? `<img src="${course.photo}" alt="${course.title}" onerror="handleImageError(this)">`
+                : `<div class="d-flex align-items-center justify-content-center w-100 h-100 bg-light text-muted"><i class="bi bi-book fs-3 opacity-25"></i></div>`;
+
+            // Badge
+            let badgeHtml = '';
+            if (isEnrolled) badgeHtml = `<span class="badge-status badge-paid">Enrolled</span>`;
+            else if (course.is_free) badgeHtml = `<span class="badge-status badge-free">Free</span>`;
+
+            // Price Display
+            const priceDisplay = isEnrolled ? '' : `<span class="price-tag">${course.formatted_price}</span>`;
+
+            // Action Label
+            const targetLink = isEnrolled ? '/dashboard/student/' : `/dashboard/student/course/${course.id}/`;
+            const actionLabel = isEnrolled ? 'Go to Class' : 'View';
+
+            const html = `
+            <div class="col">
+                <a href="${targetLink}" class="text-decoration-none text-dark">
+                    <div class="course-card-square">
+                        <div class="card-img-container">
+                            ${badgeHtml}
+                            ${imgHtml}
+                        </div>
+                        <div class="card-body-compact">
+                            <div>
+                                <h6 class="course-title-sm" title="${course.title}">${course.title}</h6>
+                                ${teacherName && teacherName !== 'Unknown Teacher' ? `
+                                <div class="teacher-info">
+                                    <div class="teacher-avatar-xs">${teacherInitial}</div>
+                                    <span class="text-truncate">${teacherName}</span>
+                                </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="card-footer-sm">
+                                ${priceDisplay}
+                                <span class="action-link">${actionLabel} <i class="bi bi-arrow-right-short"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>`;
+            grid.insertAdjacentHTML('beforeend', html);
+        });
+    }
+</script>
+{% endblock %}

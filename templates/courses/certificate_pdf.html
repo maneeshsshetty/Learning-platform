@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Certificate</title>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 1cm;
+        }
+
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+        }
+
+        .wrapper {
+            border: 10px double #4285F4;
+            padding: 40px;
+            height: 600px; /* Adjust as needed */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header {
+            font-size: 40px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .sub-header {
+            font-size: 20px;
+            color: #777;
+            margin-bottom: 40px;
+        }
+
+        .student-name {
+            font-size: 50px;
+            font-weight: bold;
+            color: #1a73e8;
+            margin: 20px 0;
+            padding: 10px;
+            border-bottom: 2px solid #ddd;
+            display: inline-block;
+        }
+
+        .course-text {
+            font-size: 22px;
+            margin-top: 30px;
+        }
+
+        .course-name {
+            font-size: 30px;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .date-text {
+            font-size: 18px;
+            color: #555;
+            margin-top: 20px;
+        }
+
+        .footer {
+            margin-top: 80px;
+            font-size: 14px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="header">Certificate of Completion</div>
+        
+        <div class="sub-header">This is to certify that</div>
+
+        <div class="student-name">
+            {{ certificate.student.username }}
+        </div>
+
+        <div class="course-text">
+            has successfully completed the course
+        </div>
+
+        <div class="course-name">
+            {{ certificate.course_offering.course.title }}
+        </div>
+
+        <div class="date-text">
+            on {{ certificate.issued_at|date:"F j, Y" }}
+        </div>
+
+        <div class="footer">
+            Certificate ID: {{ certificate.certificate_id }} | Learning Platform
+        </div>
+    </div>
+</body>
+</html>

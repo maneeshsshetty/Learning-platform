@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+
+{% block title %}My Learning Dashboard{% endblock %}
+
+{% block content %}
+<!-- Close the container from base.html to allow full-width hero -->
+</div>
+
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        --card-bg: #ffffff;
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Remove default padding to allow hero to touch navbar */
+    body {
+        padding-top: 0 !important;
+    }
+
+    .main-content {
+        padding-top: 0 !important;
+    }
+
+    /* Hero Section matching Available Courses */
+    .dashboard-hero {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 5rem 0 5rem;
+        border-radius: 0 0 24px 24px;
+        margin-bottom: 3rem;
+        position: relative;
+        z-index: 10;
+        box-shadow: var(--shadow-md);
+    }
+
+    .dashboard-hero::after {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 300px;
+        height: 300px;
+        background: rgba(37, 99, 235, 0.15);
+        border-radius: 50%;
+        filter: blur(60px);
+        pointer-events: none;
+    }
+
+    .stat-pill {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        padding: 15px 25px;
+        transition: transform 0.2s;
+    }
+
+    .stat-pill:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+    }
+
+    /* Course Cards */
+    .course-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        border-color: #2563eb;
+    }
+
+    .course-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 10;
+        background: rgba(15, 23, 42, 0.9);
+        backdrop-filter: blur(4px);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .img-container {
+        height: 180px;
+        position: relative;
+        background: #f1f5f9;
+    }
+
+    .img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .upcoming-widget {
+        background: white;
+        border-radius: 18px;
+        border: 1px solid #e2e8f0;
+        padding: 24px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+</style>
+
+<!-- Full Width Hero -->
+<div class="dashboard-hero">
+    <div class="container">
+        <div class="row align-items-center position-relative z-1">
+            <div class="col-lg-7">
+                <div class="d-flex align-items-center gap-4 mb-3 mb-lg-0">
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center border border-4 border-white border-opacity-25 shadow-lg"
+                        style="width: 80px; height: 80px; font-size: 2rem; font-weight: 700;">
+                        {{ user.username|first|upper }}
+                    </div>
+                    <div>
+                        <h1 class="display-6 fw-bold mb-1">Welcome back, {{ user.username }}!</h1>
+                        <p class="text-white opacity-75 mb-0 fs-5">Ready to continue your learning journey today?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="row g-3 justify-content-lg-end">
+                    <div class="col-6 col-sm-5">
+                        <div class="stat-pill text-center text-lg-start">
+                            <small class="d-block text-white opacity-75 text-uppercase fw-bold"
+                                style="font-size: 0.7rem; letter-spacing: 1px;">Enrolled</small>
+                            <span class="display-6 fw-bold mb-0" id="stats-enrolled">0</span>
+                            <span class="fs-6 opacity-75">Courses</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-5">
+                        <div class="stat-pill text-center text-lg-start">
+                            <small class="d-block text-white opacity-75 text-uppercase fw-bold"
+                                style="font-size: 0.7rem; letter-spacing: 1px;">Completed</small>
+                            <span class="display-6 fw-bold mb-0">0</span>
+                            <span class="fs-6 opacity-75">Courses</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0"><i class="bi bi-book-half me-2 text-primary"></i>My Courses</h4>
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-secondary rounded-start-pill px-3 active">Active</button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-end-pill px-3">Archive</button>
+                </div>
+            </div>
+
+            <div id="enrollments-grid" class="row g-4">
+                <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-lightning-charge-fill text-warning me-2"></i>Next Up</h5>
+            <div id="upcoming-classes-header-widget" class="upcoming-widget mb-4">
+            </div>
+
+            <div class="card border-0 bg-light-subtle rounded-4 p-4 shadow-sm">
+                <h6 class="fw-bold"><i class="bi bi-info-circle me-2"></i>Learning Tip</h6>
+                <p class="small text-muted mb-0">Consistent study of 15 minutes a day increases retention by 40%. Keep
+                    it up!</p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchData);
+
+        async function fetchData() {
+            try {
+                const enrollmentsRes = await fetch('/api/enrollments/');
+                const enrollments = await enrollmentsRes.json();
+                updateDashboard(enrollments);
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        function updateDashboard(enrollments) {
+            // Update counters
+            document.getElementById('stats-enrolled').textContent = enrollments.length;
+
+            const grid = document.getElementById('enrollments-grid');
+            grid.innerHTML = '';
+
+            if (enrollments.length === 0) {
+                grid.innerHTML = `
+                <div class="col-12">
+                    <div class="text-center py-5 bg-white rounded-4 border">
+                        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" style="width: 80px; opacity: 0.5" class="mb-3">
+                        <h5>No courses found</h5>
+                        <a href="/dashboard/courses/" class="btn btn-primary mt-2 px-4 rounded-pill">Explore Catalog</a>
+                    </div>
+                </div>`;
+                return;
+            }
+
+            enrollments.forEach(item => {
+                const imageHtml = item.course_photo ?
+                    `<img src="${item.course_photo}" alt="${item.course_title}">` :
+                    `<div class="h-100 d-flex align-items-center justify-content-center bg-dark-subtle text-muted fs-1"><i class="bi bi-image"></i></div>`;
+
+                const meetBtn = item.meet_link ?
+                    `<a href="${item.meet_link}" target="_blank" class="btn btn-primary btn-join w-100"><i class="bi bi-camera-video me-2"></i>Join Live Class</a>` :
+                    `<button disabled class="btn btn-light btn-join w-100 text-muted">No Live Session</button>`;
+
+                const html = `
+                <div class="col-md-6">
+                    <div class="course-card">
+                        <div class="img-container">
+                            <span class="course-badge">Active</span>
+                            ${imageHtml}
+                        </div>
+                        <div class="p-4 d-flex flex-column flex-grow-1">
+                            <div class="text-primary small fw-bold text-uppercase mb-1">In Progress</div>
+                            
+                            <!-- Link to Course Content -->
+                            <a href="/dashboard/student/course/${item.course_id}/" class="text-decoration-none text-dark">
+                                <h5 class="fw-bold mb-2 hover-primary">${item.course_title}</h5>
+                            </a>
+
+                            ${item.teacher_name && item.teacher_name !== 'Unknown Teacher' ? `
+                            <div class="d-flex align-items-center gap-2 mb-4">
+                                <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:24px; height:24px; font-size:0.7rem; font-weight: bold;">
+                                    ${item.teacher_name.charAt(0).toUpperCase()}
+                                </div>
+                                <span class="small text-muted">${item.teacher_name}</span>
+                            </div>
+                            ` : '<div class="mb-4"></div>'}
+                            
+                            <div class="d-grid gap-2 mt-auto">
+                                ${meetBtn}
+                                <a href="/dashboard/student/course/${item.course_id}/content/" class="btn btn-outline-primary btn-join w-100">
+                                    <i class="bi bi-collection-play me-2"></i>View Content
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                grid.insertAdjacentHTML('beforeend', html);
+            });
+
+            // Update Sidebar Widget
+            const upcomingContainer = document.getElementById('upcoming-classes-header-widget');
+            const live = enrollments.find(e => e.meet_link);
+
+            if (live) {
+                upcomingContainer.innerHTML = `
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="bg-danger bg-opacity-10 text-danger rounded-3 p-2 text-center" style="width: 60px;">
+                        <span class="d-block fw-bold h5 mb-0">${new Date().getDate()}</span>
+                        <span class="d-block small text-uppercase">NOW</span>
+                    </div>
+                    <div class="overflow-hidden">
+                            <h6 class="fw-bold text-dark mb-0 text-truncate">${live.course_title}</h6>
+                            ${live.teacher_name && live.teacher_name !== 'Unknown Teacher' ? `<small class="text-muted">Live with ${live.teacher_name}</small>` : ''}
+                        </div>
+                </div>
+                <a href="${live.meet_link}" target="_blank" class="btn btn-dark w-100 rounded-3 py-2 fw-bold">Enter Room</a>
+            `;
+            } else {
+                upcomingContainer.innerHTML = `<p class="text-muted small text-center mb-0 py-3">No classes scheduled for today.</p>`;
+            }
+        }
+    </script>
+    {% endblock %}
